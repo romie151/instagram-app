@@ -52,8 +52,8 @@ function getSingleUserImages(req, res, next) {
 
 function addImage(req, res, next) { 
   db
-    .none("INSERT INTO images (img_url, img_likes, user_ID) VALUES (${img_url}, ${img_likes}, ${user_id}", 
-    { img_url: req.body.url, img_likes: req.body.likes, user_id: req.body.id })
+    .none("INSERT INTO images (img_url, user_ID) VALUES (${img_url}, ${user_id})", 
+    { img_url: req.body.url, user_id: req.body.user_id })
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -108,6 +108,7 @@ function logoutUser(req, res, next) {
 }
 
 function createUser(req, res, next) {
+  console.log('createuser')
   if(req.body.password.length <= 6) { 
     res.status(200).json({ 
       message: `password must be longer than 6 characters`
@@ -115,16 +116,17 @@ function createUser(req, res, next) {
     return
   }
   const hash = authHelpers.createHash(req.body.password);
+  console.log('hash', hash)
+  console.log('req.body.username',req.body.username)
   db
     .none(
-      "INSERT INTO users (username, password_digest, email) VALUES (${username}, ${password}, ${email})",
-      { username: req.body.username, password: hash, email: req.body.email }
+      "INSERT INTO users (username, password_digest, full_name, email ) VALUES (${username}, ${password}, ${full_name}, ${email} )",
+      { username: req.body.username, password: hash, full_name: req.body.full_name, email: req.body.email }
     )
     .then(() => {
       res.status(200).json({
         message: `created user: ${req.body.username}`
-      }); 
-      next()
+      })
     })
     .catch(err => {
       console.log(err);
