@@ -7,6 +7,7 @@ CREATE TABLE users (
   ID SERIAL PRIMARY KEY,
   username VARCHAR UNIQUE,
   password_digest VARCHAR, 
+  full_name VARCHAR,
   email VARCHAR, 
   user_followers VARCHAR[], 
   user_following VARCHAR[]
@@ -14,12 +15,12 @@ CREATE TABLE users (
 
 /* tyler, password: 123456 */
 
-INSERT INTO users (username, password_digest, email, user_followers, user_following)
-  VALUES ('Tyler21', '$2a$10$brAZfSmByFeZmPZ/MH5zne9YDhugjW9CtsBGgXqGfix0g1tcooZWq', 
+INSERT INTO users (username, password_digest, full_name, email, user_followers, user_following)
+  VALUES ('Tyler21', '$2a$10$brAZfSmByFeZmPZ/MH5zne9YDhugjW9CtsBGgXqGfix0g1tcooZWq', 'Tyler Wentworth',
   'luiza@gmail.com', '{"john", "steven"}', '{"brian"}');
 
-  INSERT INTO users (username, password_digest, email, user_followers, user_following)
-  VALUES ('Anna', '$2a$10$brAZfSmByFeZmPZ/MH5zne9YDhugjW9CtsBGgXqGfix0g1tcsdgfg', 
+  INSERT INTO users (username, password_digest, full_name, email, user_followers, user_following)
+  VALUES ('Anna', '$2a$10$brAZfSmByFeZmPZ/MH5zne9YDhugjW9CtsBGgXqGfix0g1tcsdgfg', 'Anna Thornton',
   'anna@gmail.com', '{"steven"}', '{"brian"}');
 
 
