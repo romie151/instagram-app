@@ -48,7 +48,7 @@ class App extends Component {
 
   homepage = () => {
     return <div>
-      <div id="homePhoto">Photo</div>
+      <div id="homePhoto"><img src="" alt="phones photo"/></div>
       <div id="container">
         <div>
           <h1 id="homepageTitle">Instagram</h1>
@@ -60,7 +60,10 @@ class App extends Component {
           <input type="password" placeholder="Password" onChange={this.handlePassword} ></input>
           <input type="submit" id="submit" onClick={this.handleSubmit} ></input>
         </form>
-        <div id="login">or login</div>
+        <div id="login">
+          or Log In
+          {/* <Route path="/login" component={ Login }/> */}
+        </div>
       </div>
     </div>
   };
