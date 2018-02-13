@@ -6,7 +6,7 @@ const passport = require("../auth/local");
 //gets all info for a single user 
 function getSingleUser(req, res, next) {
   db
-    .any("select * from users join images on users.id = images.user_id where username = ${username}", req.user)
+    .any("SELECT * FROM users JOIN images ON users.id = images.user_id WHERE username = ${username}", req.user)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -26,7 +26,7 @@ function getAllUserImages(req, res, next) {
       res.status(200).json({
         status: "success",
         data: data,
-        message: "Fetched all user images"
+        message: "Fetched all images for all users"
       });
     })
     .catch(function(err) {
@@ -41,7 +41,7 @@ function getSingleUserImages(req, res, next) {
       res.status(200).json({
         status: "success",
         data: data,
-        message: "Fetched one user's image"
+        message: "Fetched all images for one user"
       });
     })
     .catch(function(err) {
@@ -51,7 +51,8 @@ function getSingleUserImages(req, res, next) {
 
 function addImage(req, res, next) { 
   db
-    .one("INSERT INTO images (img_url, img_likes, user_ID) VALUES (${img_url}, ${img_likes}, ${user_id}", req.user)
+    .none("INSERT INTO images (img_url, img_likes, user_ID) VALUES (${img_url}, ${img_likes}, ${user_id}", 
+    { img_url: req.body.url, img_likes: req.body.likes, user_id: req.body.id })
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -66,12 +67,13 @@ function addImage(req, res, next) {
 
 function addLike(req, res, next) { 
   db
-    .one("UPDATE images SET img_likes = array_cat(img_likes, '${username}') WHERE user_id= ${user_id}", req.user)
+    .none("UPDATE images SET img_likes = array_cat(img_likes, '${username}') WHERE user_id= ${id}", 
+    { username: req.body.username, id: req.body.id })
     .then(function(data) {
       res.status(200).json({
         status: "success",
         data: data,
-        message: "Added one like"
+        message: "Added one like to image"
       });
     })
     .catch(function(err) {
@@ -81,12 +83,13 @@ function addLike(req, res, next) {
 
 function addFollower(req, res, next) { 
   db
-    .one("UPDATE images SET img_likes = array_cat(img_likes, '${username}') WHERE user_id= ${user_id}", req.user)
+    .none("UPDATE users SET user_followers = array_cat(user_followers, '${username}') WHERE user_id= ${id}", 
+    { username: req.body.username, id: req.body.id })
     .then(function(data) {
       res.status(200).json({
         status: "success",
         data: data,
-        message: "Added one like"
+        message: "Added one follower"
       });
     })
     .catch(function(err) {
@@ -111,7 +114,6 @@ function createUser(req, res, next) {
     return
   }
   const hash = authHelpers.createHash(req.body.password);
-  console.log("createuser hash: ", hash);
   db
     .none(
       "INSERT INTO users (username, password_digest, email) VALUES (${username}, ${password}, ${email})",
@@ -121,7 +123,6 @@ function createUser(req, res, next) {
       res.status(200).json({
         message: `created user: ${req.body.username}`
       }); 
-      console.log('calling next ***')
       next()
     })
     .catch(err => {
@@ -132,10 +133,12 @@ function createUser(req, res, next) {
 
 module.exports = {
 getSingleUser: getSingleUser,
-getSingleUserImages: getSingleUserImages,  
+getAllUserImages: getAllUserImages,
+getSingleUserImages: getSingleUserImages, 
+addImage: addImage, 
+addLike: addLike, 
+addFollower: addFollower, 
 loginUser: loginUser, 
 logoutUser: logoutUser, 
-createUser: createUser, 
-addImage: addImage, 
-addLike: addLike
+createUser: createUser
 }; 
