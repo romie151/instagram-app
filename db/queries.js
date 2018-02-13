@@ -50,6 +50,12 @@ function getSingleUserImages(req, res, next) {
     });
 }
 
+//get all the followers for one user
+function getFollowers(req, res, next) { 
+  db
+    .any()
+}
+
 function addImage(req, res, next) { 
   db
     .none("INSERT INTO images (img_url, img_likes, user_ID) VALUES (${img_url}, ${img_likes}, ${user_id}", 
