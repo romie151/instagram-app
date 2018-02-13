@@ -63,9 +63,12 @@ class App extends Component {
           <input type="submit" id="submit" onClick={this.handleSubmit} ></input>
         </form>
         <div id="login">
-          or Log In
+          <div id="or">OR</div>
           {/* <Route path="/login" component={ Login }/> */}
         </div>
+        <form>
+          <button type="submit" id="Login" onClick={this.handleSubmit} >Login</button>
+        </form>
       </div>
     </div>
   };

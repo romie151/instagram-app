@@ -115,3 +115,29 @@ input {
   padding-right: 10%;
   margin-left: 35%
 }
+
+
+#or {
+  float: left;
+  margin-left: 50%;
+  /* margin-top: 10px; */
+  width: 260px;
+  /* padding: 9px 0px 7px 8px; */
+  /* background-color: #fff; */
+  /* background: #3897f0; */
+  border-color: #3897f0;
+  color: black;
+  /* position: relative; */
+}
+
+#Login {
+  float: left;
+  margin-left: 35%;
+  margin-top: 10px;
+  width: 260px;
+  padding: 9px 0px 7px 8px;
+  background-color: #fff;
+  background: #3897f0;
+  border-color: #3897f0;
+  color: #fff;
+}
