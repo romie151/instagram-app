@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
+import images from "../images/phone.jpeg"
 
 class Login extends React.Component {
   state = {
@@ -28,12 +29,12 @@ class Login extends React.Component {
 
     if (username.length < 6) {
       this.setState({
-        message: "Username length must be at least 3"
+        message: "Username length must be at least 6"
       });
       return;
     }
     axios
-      .post("/login", {
+      .post("/users/login", {
         username: username,
         password: password
       })
@@ -61,7 +62,7 @@ class Login extends React.Component {
 
     return (
      <div>
-        <div id="homePhoto"><img src="" alt="phones photo"/></div>
+      <div id="homePhoto"><img src={images} alt="phones photo" width="" height="618px"/></div>
         <div id="container">
           <div>
             <h1 id="homepageTitle">Instagram</h1>
