@@ -19,6 +19,7 @@ function getSingleUser(req, res, next) {
     });
 }
 
+//gets all img urls for all users
 function getAllUserImages(req, res, next) {
   db
     .any("SELECT img_url FROM users JOIN images ON users.id = images.user_id")
