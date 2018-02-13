@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Route, Link, Switch } from "react-router-dom";
+import { Redirect } from "react-router";
 import axios from "axios"
 import logo from './logo.svg';
 import './App.css';
@@ -48,6 +49,10 @@ class App extends Component {
       });
   };
 
+  handleLoginButton = () => {
+    // return <Redirect>
+  }
+
   homepage = () => {
     return <div>
       <div id="homePhoto"><img src="" alt="phones photo"/></div>
@@ -67,7 +72,7 @@ class App extends Component {
           {/* <Route path="/login" component={ Login }/> */}
         </div>
         <form>
-          <button type="submit" id="Login" onClick={this.handleSubmit} >Login</button>
+          <button type="submit" id="Login" onClick={this.handleLoginButton} >Login</button>
         </form>
       </div>
     </div>
