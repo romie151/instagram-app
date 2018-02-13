@@ -119,7 +119,8 @@ input {
 
 #or {
   float: left;
-  margin-left: 50%;
+  margin-top: 2%;
+  margin-left: 55%;
   /* margin-top: 10px; */
   width: 260px;
   /* padding: 9px 0px 7px 8px; */
@@ -140,4 +141,5 @@ input {
   background: #3897f0;
   border-color: #3897f0;
   color: #fff;
+  font-size: 14px;
 }

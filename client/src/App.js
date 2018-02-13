@@ -4,6 +4,7 @@ import { Redirect } from "react-router";
 import axios from "axios"
 import logo from './logo.svg';
 import './App.css';
+import images from "./images/phone.jpeg"
 
 import Login from "./components/Login"
 
@@ -55,7 +56,7 @@ class App extends Component {
 
   homepage = () => {
     return <div>
-      <div id="homePhoto"><img src="" alt="phones photo"/></div>
+      <div id="homePhoto"><img src={images} alt="phones photo" width="" height="618px"/></div>
       <div id="container">
         <div>
           <h1 id="homepageTitle">Instagram</h1>
@@ -77,6 +78,10 @@ class App extends Component {
       </div>
     </div>
   };
+
+  loginPage = () => {
+
+  }
 
   render() {
     console.log(this.state)
