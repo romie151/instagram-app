@@ -4,6 +4,8 @@ import axios from "axios"
 import logo from './logo.svg';
 import './App.css';
 
+import Login from "./components/Login"
+
 
 class App extends Component {
   constructor() {
@@ -37,7 +39,7 @@ class App extends Component {
 
   handleSubmit = () => {
     axios
-      .get(`/new`)
+      .post(`/new`)
       .then(res => {
         console.log("created user:", res);
       })
@@ -73,14 +75,14 @@ class App extends Component {
     return (
       <div className="App">
         <nav>
-          <Link to="/users/new">Register</Link> {"  "}
-          <Link to="/users/login">Log In</Link> {"  "}
-          <Link to="/users/profile"> Profile </Link> {"  "}
+          <Link to="/">Register</Link> {"  "}
+          <Link to="/login">Log In</Link> {"  "}
+          <Link to="/profile"> Profile </Link> {"  "}
         </nav>
         <Switch>
           <Route exact path="/" render={this.homepage} />
           {/* <Route exact path="/" render={this.login} /> */}
-          <Route path="/users" />
+          <Route path="/login" component={Login} />
         </Switch>
       </div>
     );
