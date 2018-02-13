@@ -72,10 +72,6 @@ class App extends Component {
     </div>
   };
 
-  loginPage = () => {
-
-  }
-
   render() {
     console.log(this.state)
     return (
