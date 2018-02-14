@@ -53,7 +53,7 @@ function getSingleUserImages(req, res, next) {
 function addImage(req, res, next) { 
   db
     .none("INSERT INTO images (img_url, user_ID) VALUES (${img_url}, ${user_id})", 
-    { img_url: req.body.url, user_id: req.body.user_id })
+    { img_url: req.body.url, user_id: req.body.id })
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -68,16 +68,17 @@ function addImage(req, res, next) {
 
 function addLike(req, res, next) { 
   db
-    .none("UPDATE images SET img_likes = array_cat(img_likes, '${username}') WHERE user_id= ${id}", 
-    { username: req.body.username, id: req.body.id })
-    .then(function(data) {
+    .none("UPDATE images SET img_likes = array_append(img_likes, ${username}) WHERE id=${img_id}", 
+    { username: req.body.username, img_id: req.body.img_id })
+    // [[req.body.username], req.body.img_id])
+    .then(function() {
       res.status(200).json({
         status: "success",
-        data: data,
         message: "Added one like to image"
       });
     })
     .catch(function(err) {
+      console.log(err)
       return next(err);
     });
 }
