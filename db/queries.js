@@ -57,8 +57,23 @@ function addImage(req, res, next) {
     .then(function(data) {
       res.status(200).json({
         status: "success",
-        data: data,
         message: "Added one image"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+function addUserDescription(req, res, next) { 
+  db
+    .none("UPDATE users SET user_description = ${description} WHERE id=${id}", 
+    { description: req.body.description, id:req.body.id }
+  )
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        message: "Added user description"
       });
     })
     .catch(function(err) {
@@ -83,15 +98,64 @@ function addLike(req, res, next) {
     });
 }
 
-function addFollower(req, res, next) { 
+function removeLike(req, res, next) { 
   db
-    .none("UPDATE users SET user_followers = array_cat(user_followers, '${username}') WHERE user_id= ${id}", 
-    { username: req.body.username, id: req.body.id })
+    .none("UPDATE images SET img_likes = array_remove(img_likes, ${username}) WHERE id=${img_id}", 
+    { username: req.body.username, img_id: req.body.img_id })
+    // [[req.body.username], req.body.img_id])
+    .then(function() {
+      res.status(200).json({
+        status: "success",
+        message: "Removed like from image"
+      });
+    })
+    .catch(function(err) {
+      console.log(err)
+      return next(err);
+    });
+}
+
+//addFollow function does the below:
+//adds username of user being followed to the user_following column of the user doing the following AND
+//adds username of user doing the following to the user_followers column of the user being followed
+function addFollow(req, res, next) { 
+  db
+    .task(t => { 
+      return t.none("UPDATE users SET user_followers = array_append(user_followers, ${username}) WHERE id=${user_id}", 
+      { username: req.body.username, user_id: req.body.user_id })
+      .then(user => { 
+        return t.none("UPDATE users SET user_following = array_append(user_following, ${user_username}) WHERE username=${username}", 
+        { user_username: req.body.user_username, username: req.body.username, user_id: req.body.user_id  })
+      })
+    })
     .then(function(data) {
       res.status(200).json({
         status: "success",
-        data: data,
         message: "Added one follower"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+//removeFollow function does the below:
+//removes username of user being followed to the user_following column of the user doing the following AND
+//removes username of user doing the following to the user_followers column of the user being followed
+function removeFollow(req, res, next) { 
+  db
+  .task(t => { 
+    return t.none("UPDATE users SET user_followers = array_remove(user_followers, ${username}) WHERE id=${user_id}", 
+    { username: req.body.username, user_id: req.body.user_id })
+    .then(user => { 
+      return t.none("UPDATE users SET user_following = array_remove(user_following, ${user_username}) WHERE username=${username}", 
+      { user_username: req.body.user_username, username: req.body.username, user_id: req.body.user_id  })
+    })
+  })
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        message: "Removed one follower"
       });
     })
     .catch(function(err) {
@@ -140,8 +204,11 @@ getSingleUser: getSingleUser,
 getAllUserImages: getAllUserImages,
 getSingleUserImages: getSingleUserImages, 
 addImage: addImage, 
+addUserDescription: addUserDescription,
 addLike: addLike, 
-addFollower: addFollower, 
+removeLike: removeLike,
+addFollow: addFollow, 
+removeFollow: removeFollow,
 loginUser: loginUser, 
 logoutUser: logoutUser, 
 createUser: createUser
