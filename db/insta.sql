@@ -37,3 +37,15 @@ INSERT INTO images (img_URL, img_likes, user_ID)
 
 INSERT INTO images (img_URL, img_likes, user_ID)
   VALUES ('http:dsghjdsg.jpg', '{"john", "steven", "luiza"}', 2);
+
+
+CREATE TABLE comments (
+  ID SERIAL PRIMARY KEY,
+  comment VARCHAR, 
+  username VARCHAR,
+  comment_timestamp timestamp not null default CURRENT_TIMESTAMP,
+  img_ID SERIAL REFERENCES images
+);
+
+INSERT INTO comments (comment, username, img_ID)
+  VALUES ('amazing', 'luiza', 1);
