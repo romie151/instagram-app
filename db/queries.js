@@ -20,13 +20,11 @@ function getSingleUser(req, res, next) {
 }
 
 //gets img_url, likes, comments for one image 
+//image owner is the user the image belongs to 
 function getSingleImageInfo(req, res, next) {
   db
-    .any("SELECT user_id, img_id, img_url, img_likes, comments.id + AS comment_id, comment,"
-    + " comments.username AS commenters_username, comment_timestamp  FROM comments JOIN images" 
-    + " ON (img_id = images.id) WHERE img_id = ${img_id} ORDER BY comment_timestamp DESC", 
-    // {id: req.user.id, img_id: req.params.img_id}
-    req.params
+    .any("SELECT user_id AS image_owner_id, img_id, img_url, img_likes, comments.id AS comment_id, comment, comments.username AS commenters_username, comment_timestamp  FROM comments JOIN images ON (img_id = images.id) WHERE img_id=${img_id} ORDER BY comment_timestamp DESC",
+   { img_id: req.params.img_id } 
   )
     .then(function(data) {
       res.status(200).json({
@@ -56,9 +54,24 @@ function getAllUserImages(req, res, next) {
     });
 }
 //gets all image urls for a single user
-function getSingleUserImages(req, res, next) {
+function getLoggedUserImages(req, res, next) {
   db
     .any("SELECT img_url FROM users JOIN images ON users.id = images.user_id WHERE username = ${username}", req.user)
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Fetched all images for one user"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+function getSingleUserImages(req, res, next) {
+  db
+    .any("SELECT img_url FROM users JOIN images ON users.id = images.user_id WHERE username = ${username}", req.params)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -253,6 +266,7 @@ module.exports = {
 getSingleUser: getSingleUser,
 getSingleImageInfo: getSingleImageInfo,
 getAllUserImages: getAllUserImages,
+getLoggedUserImages: getLoggedUserImages, 
 getSingleUserImages: getSingleUserImages, 
 addImage: addImage, 
 addComment: addComment, 
