@@ -1,12 +1,8 @@
 import React from "react";
 import axios from "axios"
-import { Redirect } from 'react-router'
-import { Route, Link, Switch } from "react-router-dom";
-
 
 import RegisterComponent from "../components/RegisterComponent"
-import LoginComponent from '../components/Login'
-
+import LoginComponent from '../components/LoginComponent'
 import UserProfile from "./UserProfile"
 
 
@@ -19,7 +15,7 @@ class User extends React.Component {
       full_name: '',
       username: '',
       password: '',
-      loggedIn: false
+      userStatus: 'register'
     }
   }
 
@@ -29,14 +25,8 @@ class User extends React.Component {
     })
   }
 
-  handleLoginFormSubmit = (e = false) => {
-
-    // if event is from form or from handleRegisterFormSubmit
-    if(e) {
-      e.preventDefault();
-    }
-
-    console.log('handleLoginFormSubmitabcdefghij')
+  handleLoginFormSubmit = e => {
+    e.preventDefault();
 
     const { username, password } = this.state;
     axios
@@ -45,13 +35,11 @@ class User extends React.Component {
         password: password
       })
       .then(res => {
-        console.log('logged in')
         this.setState({
-          loggedIn: true
+          userStatus: 'success'
         });
       })
       .catch(err => {
-        console.log('err logging in')
         this.setState({
           username: "",
           password: "",
@@ -67,10 +55,20 @@ class User extends React.Component {
     axios
       .post("/users/new", { username, password, full_name, email })
       .then(res => {
-        this.handleLoginFormSubmit();
+        axios
+          .post("/users/login", { username, password })
+          .then(res => {
+            this.setState({
+              userStatus: 'success'
+            })
+          })
+          .catch(err => {
+            this.setState({
+              message: 'Created account.  Error logging in'
+            })
+          }) 
       })
       .catch(err => {
-        console.log('err register')
         this.setState({
           username: "",
           password: "",
@@ -79,19 +77,35 @@ class User extends React.Component {
       });  
   }
 
+  // handles register/login toggle
+  handleToggleBtn = str => {
+    this.setState({
+      userStatus: str
+    })
+  }
+
+
   render() {
-    const { loggedIn } = this.state;
-    console.log(this.state)
-    if (loggedIn === false) {
+    const { userStatus } = this.state;
+    if (userStatus === 'register') {
       return (
         <RegisterComponent
           handleFormInput={this.handleFormInput}
-          handleFormSubmit={this.handleRegisterFormSubmit}
+          handleRegisterFormSubmit={this.handleRegisterFormSubmit}
+          handleToggleBtn={this.handleToggleBtn}
         />
       );
+    } else if (userStatus === 'login') {
+      return (
+        <LoginComponent
+          handleFormInput={this.handleFormInput}
+          handleLoginFormSubmit={this.handleLoginFormSubmit}
+          handleToggleBtn={this.handleToggleBtn}
+        />
+      )
     } else {
       return (
-        <UserProfile state={this.state} />
+        <div> logged in do something here </div>
       )
     }
   }
