@@ -6,7 +6,7 @@ const passport = require("../auth/local");
 //gets all info for a single user 
 function getSingleUser(req, res, next) {
   db
-    .any("SELECT * FROM users JOIN images ON users.id = images.user_id WHERE username = ${username}", req.user)
+    .any("SELECT user_id, username, full_name, email,  user_description, user_followers, user_following, images.id AS img_id, img_url, img_likes FROM users JOIN images ON (users.id = images.user_id) WHERE username = ${username}", req.user)
     .then(function(data) {
       res.status(200).json({
         status: "success",
