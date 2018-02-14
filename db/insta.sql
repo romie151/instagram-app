@@ -5,10 +5,10 @@ CREATE DATABASE insta;
 
 CREATE TABLE users (
   ID SERIAL PRIMARY KEY,
-  username VARCHAR UNIQUE,
-  password_digest VARCHAR, 
-  full_name VARCHAR,
-  email VARCHAR, 
+  username VARCHAR UNIQUE NOT NULL,
+  password_digest VARCHAR NOT NULL, 
+  full_name VARCHAR NOT NULL,
+  email VARCHAR NOT NULL, 
   user_description VARCHAR, 
   user_followers VARCHAR[], 
   user_following VARCHAR[]
