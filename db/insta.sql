@@ -14,14 +14,12 @@ CREATE TABLE users (
   user_following VARCHAR[]
 );
 
-/* tyler, password: 123456 */
+/* katherine.reyes, password: 123456 */
 
 INSERT INTO users (username, password_digest, full_name, email, user_description, user_followers, user_following)
-  VALUES ('Tyler21', '$2a$10$brAZfSmByFeZmPZ/MH5zne9YDhugjW9CtsBGgXqGfix0g1tcooZWq', 'Tyler Wentworth',
-  'tyler@gmail.com', 'Animal lover who hikes all the time','{"john", "steven"}', '{"brian"}');
-
-  INSERT INTO users (username, password_digest, full_name, email, user_description, user_followers, user_following)
-  VALUES ('Mario3', '$2a$10$Luwu18FIx.rSW24X6DKa.OU/t3BKIKIQtBEiI8mo2veV7mlVnGNhS', 'Anna Thornton',
+  VALUES ('katherine.reyes', '$2a$10$brAZfSmByFeZmPZ/MH5zne9YDhugjW9CtsBGgXqGfix0g1tcooZWq', 'Katherine Reyes',
+  'katherine@gmail.com', 'Espresso.','{"john", "steven"}', '{"brian"}'),
+ ('Mario3', '$2a$10$Luwu18FIx.rSW24X6DKa.OU/t3BKIKIQtBEiI8mo2veV7mlVnGNhS', 'Anna Thornton',
   'anna@gmail.com', 'Coffee drinker and starter upper','{"steven"}', '{"brian"}');
 
 
@@ -33,10 +31,15 @@ CREATE TABLE images (
 );
 
 INSERT INTO images (img_URL, img_likes, user_ID)
-  VALUES ('http:hsjghsdg.jpg', '{"john", "steven", "luiza"}', 1);
-
-INSERT INTO images (img_URL, img_likes, user_ID)
-  VALUES ('http:dsghjdsg.jpg', '{"john", "steven", "luiza"}', 2);
+  VALUES ('https://images.pexels.com/photos/90294/pexels-photo-90294.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb', '{"john", "steven", "luiza"}', 1), 
+  ('https://images.pexels.com/photos/21809/pexels-photo.jpg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb', '{"john", "steven", "luiza"}', 1), 
+  ('https://images.pexels.com/photos/21809/pexels-photo.jpg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb', '{"john", "steven", "luiza"}', 1), 
+  ('https://images.pexels.com/photos/442544/pexels-photo-442544.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb', '{"john", "steven", "luiza"}', 1), 
+  ('https://images.pexels.com/photos/102726/pexels-photo-102726.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb', '{"john", "steven", "luiza"}', 1),
+  ('https://images.pexels.com/photos/845242/pexels-photo-845242.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb', '{"john", "steven", "luiza"}', 1), 
+  ('https://images.pexels.com/photos/850453/pexels-photo-850453.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb', '{"john", "steven", "luiza"}', 1), 
+  ('https://images.pexels.com/photos/848594/pexels-photo-848594.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb', '{"john", "steven", "luiza"}', 1), 
+  ('http:dsghjdsg.jpg', '{"john", "steven", "luiza"}', 2);
 
 
 CREATE TABLE comments (
@@ -48,4 +51,7 @@ CREATE TABLE comments (
 );
 
 INSERT INTO comments (comment, username, img_ID)
-  VALUES ('amazing', 'luiza', 1);
+  VALUES ('amazing', 'luiza', 2),
+  ('great', 'mario3', 1), 
+  ('love it', 'mario4', 1), 
+  ('fire', 'mario5', 1);

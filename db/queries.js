@@ -19,6 +19,27 @@ function getSingleUser(req, res, next) {
     });
 }
 
+//gets img_url, likes, comments for one image 
+function getSingleImageInfo(req, res, next) {
+  db
+    .any("SELECT user_id, img_id, img_url, img_likes, comments.id + AS comment_id, comment,"
+    + " comments.username AS commenters_username, comment_timestamp  FROM comments JOIN images" 
+    + " ON (img_id = images.id) WHERE img_id = ${img_id} ORDER BY comment_timestamp DESC", 
+    // {id: req.user.id, img_id: req.params.img_id}
+    req.params
+  )
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Fetched info for single image"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
 //gets all img urls for all users
 function getAllUserImages(req, res, next) {
   db
@@ -230,6 +251,7 @@ function createUser(req, res, next) {
 
 module.exports = {
 getSingleUser: getSingleUser,
+getSingleImageInfo: getSingleImageInfo,
 getAllUserImages: getAllUserImages,
 getSingleUserImages: getSingleUserImages, 
 addImage: addImage, 
