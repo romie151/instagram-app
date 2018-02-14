@@ -72,7 +72,7 @@ button {
   float: left;
 }
 
-#homePhoto {
+.homePhoto {
   /* border: 1px solid #e6e6e6;  */
   /* background-color: #fff; */
   flex-basis: 454px;
