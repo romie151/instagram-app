@@ -4,9 +4,24 @@ const authHelpers = require("../auth/helpers");
 const passport = require("../auth/local");
 
 //gets all info for a single user 
-function getSingleUser(req, res, next) {
+function getLoggedUser(req, res, next) {
   db
     .any("SELECT user_id, username, full_name, email,  user_description, user_followers, user_following, images.id AS img_id, img_url, img_likes FROM users JOIN images ON (users.id = images.user_id) WHERE username = ${username}", req.user)
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Fetched one user"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+function getSingleUser(req, res, next) {
+  db
+    .any("SELECT user_id, username, full_name, email,  user_description, user_followers, user_following, images.id AS img_id, img_url, img_likes FROM users JOIN images ON (users.id = images.user_id) WHERE username = ${username}", req.params)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -263,6 +278,7 @@ function createUser(req, res, next) {
 }
 
 module.exports = {
+getLoggedUser: getLoggedUser,
 getSingleUser: getSingleUser,
 getSingleImageInfo: getSingleImageInfo,
 getAllUserImages: getAllUserImages,
