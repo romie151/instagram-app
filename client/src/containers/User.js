@@ -1,11 +1,13 @@
 import React from "react";
 import axios from "axios"
 import { Redirect } from 'react-router'
+import { Route, Link, Switch } from "react-router-dom";
 
 
 import RegisterComponent from "../components/RegisterComponent"
-
 import LoginComponent from '../components/Login'
+
+import UserProfile from "./UserProfile"
 
 
 class User extends React.Component {
@@ -28,6 +30,8 @@ class User extends React.Component {
   }
 
   handleLoginFormSubmit = (e = false) => {
+
+    // if event is from form or from handleRegisterFormSubmit
     if(e) {
       e.preventDefault();
     }
@@ -86,7 +90,9 @@ class User extends React.Component {
         />
       );
     } else {
-      return (<div>loggedin</div>)
+      return (
+        <UserProfile state={this.state} />
+      )
     }
   }
 }

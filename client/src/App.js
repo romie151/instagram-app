@@ -2,11 +2,14 @@ import React from "react";
 import { Route, Link, Switch } from "react-router-dom";
 
 import User from "./containers/User"
+import LoginComponent from './components/Login'
+
 
 const App = () => {
   return (
     <div>
-      <Route path="/" component={User} />
+      <Route exact path="/" component={User} />
+      <Route path="/login" component={LoginComponent} />
     </div>
   )
 }

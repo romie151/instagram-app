@@ -26,7 +26,7 @@ const RegisterComponent = ({ handleFormInput, handleFormSubmit}) => {
         <div id="or">OR</div>
         <div id="login">
           <form>
-          <button type="submit" id="Login"><Link to="/user/login">Log In</Link></button>
+          <button type="submit" id="Login"><Link to="/login">Log In</Link></button>
           </form>
         </div>
       </div>
