@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
-import images from "../images/phone.jpeg"
+import { Link } from "react-router-dom";
+import phone from "../images/phone.jpeg"
 
 class Login extends React.Component {
   state = {
@@ -54,15 +55,14 @@ class Login extends React.Component {
   };
 
   render() {
-    const { username, password, message, loggedIn } = this.state;
-    console.log(this.state)
+    const { loggedIn } = this.state;
     if (loggedIn) {
       return <Redirect to="/profile" />;
     }
 
     return (
-     <div>
-      <div id="homePhoto"><img src={images} alt="phones photo" width="" height="618px"/></div>
+      <div>
+        <div className="homePhoto"><img src={phone} alt="phones" width="" height="618px" /></div>
         <div id="container">
           <div>
             <h1 id="homepageTitle">Instagram</h1>
@@ -72,6 +72,12 @@ class Login extends React.Component {
             <input type="password" placeholder="Password" onChange={this.handlePassword} ></input>
             <input type="submit" id="submit" onClick={this.handleSubmit} ></input>
           </form>
+          <div id="or">OR</div>
+          <div id="login">
+            <form>
+              <button type="submit" id="Login"><Link to="/">Sign Up</Link></button>
+            </form>
+          </div>
         </div>
       </div>
     );
