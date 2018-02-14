@@ -65,6 +65,35 @@ function addImage(req, res, next) {
     });
 }
 
+function addComment(req, res, next) { 
+  db
+    .none("INSERT INTO comments (comment, username, img_id) VALUES (${comment}, ${username}, ${img_id} )", 
+    { comment: req.body.comment, username: req.body.username, img_id: req.body.img_id })
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        message: "Added one comment"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+function removeComment(req, res, next) { 
+  db
+    .none("DELETE FROM comments WHERE id=${id}", { id: req.body.id })
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        message: "Removed one comment"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
 function addUserDescription(req, res, next) { 
   db
     .none("UPDATE users SET user_description = ${description} WHERE id=${id}", 
@@ -204,6 +233,8 @@ getSingleUser: getSingleUser,
 getAllUserImages: getAllUserImages,
 getSingleUserImages: getSingleUserImages, 
 addImage: addImage, 
+addComment: addComment, 
+removeComment: removeComment, 
 addUserDescription: addUserDescription,
 addLike: addLike, 
 removeLike: removeLike,

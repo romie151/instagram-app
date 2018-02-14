@@ -21,6 +21,10 @@ router.get("/getsingleuserimages", loginRequired, db.getSingleUserImages)
 
 router.post("/addimage", loginRequired, db.addImage)
 
+router.post("/addcomment", db.addComment)
+
+router.post("/removecomment", db.removeComment)
+
 router.post("/adduserdescription", db.addUserDescription)
 
 router.post("/addlike", loginRequired, db.addLike)
