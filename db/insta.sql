@@ -21,7 +21,7 @@ INSERT INTO users (username, password_digest, full_name, email, user_description
   'tyler@gmail.com', 'Animal lover who hikes all the time','{"john", "steven"}', '{"brian"}');
 
   INSERT INTO users (username, password_digest, full_name, email, user_description, user_followers, user_following)
-  VALUES ('Anna', '$2a$10$brAZfSmByFeZmPZ/MH5zne9YDhugjW9CtsBGgXqGfix0g1tcsdgfg', 'Anna Thornton',
+  VALUES ('Mario3', '$2a$10$Luwu18FIx.rSW24X6DKa.OU/t3BKIKIQtBEiI8mo2veV7mlVnGNhS', 'Anna Thornton',
   'anna@gmail.com', 'Coffee drinker and starter upper','{"steven"}', '{"brian"}');
 
 

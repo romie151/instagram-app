@@ -19,6 +19,7 @@ function getSingleUser(req, res, next) {
     });
 }
 
+//gets all img urls for all users
 function getAllUserImages(req, res, next) {
   db
     .any("SELECT img_url FROM users JOIN images ON users.id = images.user_id")
@@ -51,8 +52,8 @@ function getSingleUserImages(req, res, next) {
 
 function addImage(req, res, next) { 
   db
-    .none("INSERT INTO images (img_url, img_likes, user_ID) VALUES (${img_url}, ${img_likes}, ${user_id}", 
-    { img_url: req.body.url, img_likes: req.body.likes, user_id: req.body.id })
+    .none("INSERT INTO images (img_url, user_ID) VALUES (${img_url}, ${user_id})", 
+    { img_url: req.body.url, user_id: req.body.id })
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -67,16 +68,17 @@ function addImage(req, res, next) {
 
 function addLike(req, res, next) { 
   db
-    .none("UPDATE images SET img_likes = array_cat(img_likes, '${username}') WHERE user_id= ${id}", 
-    { username: req.body.username, id: req.body.id })
-    .then(function(data) {
+    .none("UPDATE images SET img_likes = array_append(img_likes, ${username}) WHERE id=${img_id}", 
+    { username: req.body.username, img_id: req.body.img_id })
+    // [[req.body.username], req.body.img_id])
+    .then(function() {
       res.status(200).json({
         status: "success",
-        data: data,
         message: "Added one like to image"
       });
     })
     .catch(function(err) {
+      console.log(err)
       return next(err);
     });
 }
@@ -107,6 +109,7 @@ function logoutUser(req, res, next) {
 }
 
 function createUser(req, res, next) {
+  console.log('createuser')
   if(req.body.password.length <= 6) { 
     res.status(200).json({ 
       message: `password must be longer than 6 characters`
@@ -114,16 +117,17 @@ function createUser(req, res, next) {
     return
   }
   const hash = authHelpers.createHash(req.body.password);
+  console.log('hash', hash)
+  console.log('req.body.username',req.body.username)
   db
     .none(
-      "INSERT INTO users (username, password_digest, email) VALUES (${username}, ${password}, ${email})",
-      { username: req.body.username, password: hash, email: req.body.email }
+      "INSERT INTO users (username, password_digest, full_name, email ) VALUES (${username}, ${password}, ${full_name}, ${email} )",
+      { username: req.body.username, password: hash, full_name: req.body.full_name, email: req.body.email }
     )
     .then(() => {
       res.status(200).json({
         message: `created user: ${req.body.username}`
-      }); 
-      next()
+      })
     })
     .catch(err => {
       console.log(err);
