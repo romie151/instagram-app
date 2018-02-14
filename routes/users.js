@@ -15,7 +15,13 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
   res.json(req.user);
 });
 
+router.post("/addimage", loginRequired, db.addImage)
+
+router.post("/addlike", db.addLike)
+
 router.get("/getcurrentuser", loginRequired, db.getSingleUser)
+
+router.get("/getsingleuserimages", loginRequired, db.getSingleUserImages)
 
 router.get("/logout", db.logoutUser)
 
