@@ -4,7 +4,7 @@ const authHelpers = require("../auth/helpers");
 const passport = require("../auth/local");
 
 //gets all info for a single user 
-function getLoggedUser(req, res, next) {
+function getLoggedUserPhotos(req, res, next) {
   db
     .any("SELECT user_id, username, full_name, email,  user_description, user_followers, user_following, images.id AS img_id, img_url, img_likes FROM users JOIN images ON (users.id = images.user_id) WHERE username = ${username}", req.user)
     .then(function(data) {
@@ -278,7 +278,7 @@ function createUser(req, res, next) {
 }
 
 module.exports = {
-getLoggedUser: getLoggedUser,
+getLoggedUserPhotos: getLoggedUserPhotos,
 getSingleUser: getSingleUser,
 getSingleImageInfo: getSingleImageInfo,
 getAllUserImages: getAllUserImages,
