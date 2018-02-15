@@ -11,7 +11,10 @@ function getLoggedUser(req, res, next) {
       res.status(200).json({
         status: "success",
         data: data,
-        message: "Fetched one user"
+        message: "Fetched one user",
+        req: req.user,
+        username: req.username,
+        userusername: req.user.username
       });
     })
     .catch(function(err) {
