@@ -13,8 +13,6 @@ function getLoggedUser(req, res, next) {
         data: data,
         message: "Fetched one user",
         req: req.user,
-        username: req.username,
-        userusername: req.user.username
       });
     })
     .catch(function(err) {
