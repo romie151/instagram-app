@@ -105,7 +105,7 @@ class User extends React.Component {
       )
     } else {
       return (
-        <div> logged in do something here </div>
+        <UserProfile />
       )
     }
   }

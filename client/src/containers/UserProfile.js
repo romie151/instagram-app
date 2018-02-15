@@ -6,14 +6,23 @@ import { Route, Link, Switch } from "react-router-dom";
 
 
 class UserProfile extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
-    this.state = props.state
+  }
+
+  componentDidMount() {
+    axios
+      .get("/users/getcurrentuser")
+      .then(res => {
+        console.log('data: ', res.data)
+      })
+      .catch(err => {
+        console.log('err: ', err)
+      });  
   }
 
   render() {
-  	console.log(this.state)
   	return (
   		<div>userprofile</div>
   	)
