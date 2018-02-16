@@ -4,6 +4,7 @@ import { Redirect } from 'react-router'
 import { Route, Link, Switch } from "react-router-dom";
 
 import ImageListComponent from "../components/ImageListComponent"
+import SingleImage from "./SingleImage"
 
 class UserProfile extends React.Component {
   constructor() {
@@ -27,10 +28,19 @@ class UserProfile extends React.Component {
       });  
   }
 
+  renderImage = props => {
+    const { imgid } = props.match.params;
+    return <SingleImage imgid={imgid} />
+  }
+
+
   render() {
-  	return (
-  		<ImageListComponent userData={this.state.userData}/>
-  	)
+    return (
+      <Switch>
+        <Route exact path='/user' component={() => <ImageListComponent userData={this.state.userData} />} />
+        <Route path='/user/:imgid' render={this.renderImage} />
+      </Switch>
+    )
   } 
 }
 

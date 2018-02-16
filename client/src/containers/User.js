@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios"
+import { Redirect, Route, Switch } from "react-router-dom";
 
 import RegisterComponent from "../components/RegisterComponent"
 import LoginComponent from '../components/LoginComponent'
@@ -17,6 +18,12 @@ class User extends React.Component {
       password: '',
       userStatus: 'register'
     }
+  }
+
+  componentWillMount() {
+    this.setState({
+      userStatus: ''
+    })
   }
 
   handleFormInput = e => {
@@ -38,6 +45,7 @@ class User extends React.Component {
         this.setState({
           userStatus: 'success'
         });
+        <Redirect to='/user' />
       })
       .catch(err => {
         this.setState({
@@ -84,30 +92,31 @@ class User extends React.Component {
     })
   }
 
+  renderLogin = () => {
+    return <LoginComponent 
+            handleFormInput={this.handleFormInput}
+            handleLoginFormSubmit={this.handleLoginFormSubmit}
+            handleToggleBtn={this.handleToggleBtn}
+          />  
+  }
+
+  renderRegister = () => {
+    return <RegisterComponent
+            handleFormInput={this.handleFormInput}
+            handleRegisterFormSubmit={this.handleRegisterFormSubmit}
+            handleToggleBtn={this.handleToggleBtn}
+          />
+  }
 
   render() {
-    const { userStatus } = this.state;
-    if (userStatus === 'register') {
-      return (
-        <RegisterComponent
-          handleFormInput={this.handleFormInput}
-          handleRegisterFormSubmit={this.handleRegisterFormSubmit}
-          handleToggleBtn={this.handleToggleBtn}
-        />
-      );
-    } else if (userStatus === 'login') {
-      return (
-        <LoginComponent
-          handleFormInput={this.handleFormInput}
-          handleLoginFormSubmit={this.handleLoginFormSubmit}
-          handleToggleBtn={this.handleToggleBtn}
-        />
-      )
-    } else {
-      return (
-        <UserProfile />
-      )
-    }
+    return (
+      <Switch>
+        <Route exact path="/" render={this.renderRegister} />
+        <Route path="/register" render={this.renderRegister} />
+        <Route path="/login" render={this.renderLogin} />
+        <Route path="/user" component={UserProfile} />
+      </Switch>
+    )
   }
 }
 
