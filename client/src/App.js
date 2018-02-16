@@ -1,4 +1,5 @@
 import React from "react";
+import "./App.css";
 import { Route, Link, Switch } from "react-router-dom";
 
 import User from "./containers/User"
