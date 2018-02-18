@@ -15,9 +15,9 @@ const LoginComponent = ({ handleFormInput, handleLoginFormSubmit, handleToggleBt
         <br/>
         <h1 id="tagline"> Sign in to see photos and videos from your friends. </h1> 
         <form onSubmit={handleLoginFormSubmit}>
-        <input type="text" placeholder="Username" onChange={handleFormInput} name='username' ></input>
-        <input type="password" placeholder="Password" onChange={handleFormInput} name='password'></input>
-        <input type="submit" id="submit" value='Login'></input>
+        <input className="input" type="text" placeholder="Username" onChange={handleFormInput} name='username' ></input>
+        <input className="input" type="password" placeholder="Password" onChange={handleFormInput} name='password'></input>
+        <input type="submit" className="signup"  value='Login'></input>
       </form>
         </div>
       </div>

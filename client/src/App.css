@@ -1,6 +1,36 @@
 
 @import url('https://fonts.googleapis.com/css?family=Grand+Hotel');
 
+#singleimage { 
+  height: 10px; 
+}
+
+#topbar { 
+background-color: white;
+position: fixed; 
+margin-top: -5%; 
+width: 100%; 
+}
+
+#instatitle { 
+  width: 10%; 
+  margin-left: 25%; 
+  margin-top: 0.5%; 
+  position: fixed; 
+}
+
+#instalogo { 
+  width: 2.5%;  
+  margin-left: 20%; 
+  position: fixed; 
+  margin-top: 1.25%; 
+}
+
+#search { 
+  background-color: #FAFAFA; 
+  width: 10px; 
+  position: fixed; 
+}
 
 .App-nav {
   background-color: #fff;
@@ -16,6 +46,16 @@
   position: fixed; 
   margin-left: 25%; 
   margin-top: 8%; 
+}
+
+.listimage { 
+width: 30%; 
+float: left;
+}
+
+.imglist { 
+width: 110%; 
+margin-top: 5%; 
 }
 
 .input { 
