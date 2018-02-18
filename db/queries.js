@@ -4,14 +4,49 @@ const authHelpers = require("../auth/helpers");
 const passport = require("../auth/local");
 
 //gets all info for a single user 
+function getLoggedUser(req, res, next) {
+  db
+    .any("SELECT user_id, username, full_name, email,  user_description, user_followers, user_following, images.id AS img_id, img_url, img_likes FROM users JOIN images ON (users.id = images.user_id) WHERE username = ${username}", req.user)
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Fetched one user",
+        req: req.user,
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
 function getSingleUser(req, res, next) {
   db
-    .any("SELECT * FROM users JOIN images ON users.id = images.user_id WHERE username = ${username}", req.user)
+    .any("SELECT user_id, username, full_name, email,  user_description, user_followers, user_following, images.id AS img_id, img_url, img_likes FROM users JOIN images ON (users.id = images.user_id) WHERE username = ${username}", req.params)
     .then(function(data) {
       res.status(200).json({
         status: "success",
         data: data,
         message: "Fetched one user"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+//gets img_url, likes, comments for one image 
+//image owner is the user the image belongs to 
+function getSingleImageInfo(req, res, next) {
+  db
+    .any("SELECT user_id AS image_owner_id, img_id, img_url, img_likes, comments.id AS comment_id, comment, comments.username AS commenters_username, comment_timestamp  FROM comments JOIN images ON (img_id = images.id) WHERE img_id=${img_id} ORDER BY comment_timestamp DESC",
+   { img_id: req.params.img_id } 
+  )
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Fetched info for single image"
       });
     })
     .catch(function(err) {
@@ -35,9 +70,24 @@ function getAllUserImages(req, res, next) {
     });
 }
 //gets all image urls for a single user
-function getSingleUserImages(req, res, next) {
+function getLoggedUserImages(req, res, next) {
   db
     .any("SELECT img_url FROM users JOIN images ON users.id = images.user_id WHERE username = ${username}", req.user)
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Fetched all images for one user"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+function getSingleUserImages(req, res, next) {
+  db
+    .any("SELECT img_url FROM users JOIN images ON users.id = images.user_id WHERE username = ${username}", req.params)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -57,8 +107,52 @@ function addImage(req, res, next) {
     .then(function(data) {
       res.status(200).json({
         status: "success",
-        data: data,
         message: "Added one image"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+function addComment(req, res, next) { 
+  db
+    .none("INSERT INTO comments (comment, username, img_id) VALUES (${comment}, ${username}, ${img_id} )", 
+    { comment: req.body.comment, username: req.body.username, img_id: req.body.img_id })
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        message: "Added one comment"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+function removeComment(req, res, next) { 
+  db
+    .none("DELETE FROM comments WHERE id=${id}", { id: req.body.id })
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        message: "Removed one comment"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+function addUserDescription(req, res, next) { 
+  db
+    .none("UPDATE users SET user_description = ${description} WHERE id=${id}", 
+    { description: req.body.description, id:req.body.id }
+  )
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        message: "Added user description"
       });
     })
     .catch(function(err) {
@@ -83,15 +177,64 @@ function addLike(req, res, next) {
     });
 }
 
-function addFollower(req, res, next) { 
+function removeLike(req, res, next) { 
   db
-    .none("UPDATE users SET user_followers = array_cat(user_followers, '${username}') WHERE user_id= ${id}", 
-    { username: req.body.username, id: req.body.id })
+    .none("UPDATE images SET img_likes = array_remove(img_likes, ${username}) WHERE id=${img_id}", 
+    { username: req.body.username, img_id: req.body.img_id })
+    // [[req.body.username], req.body.img_id])
+    .then(function() {
+      res.status(200).json({
+        status: "success",
+        message: "Removed like from image"
+      });
+    })
+    .catch(function(err) {
+      console.log(err)
+      return next(err);
+    });
+}
+
+//addFollow function does the below:
+//adds username of user being followed to the user_following column of the user doing the following AND
+//adds username of user doing the following to the user_followers column of the user being followed
+function addFollow(req, res, next) { 
+  db
+    .task(t => { 
+      return t.none("UPDATE users SET user_followers = array_append(user_followers, ${username}) WHERE id=${user_id}", 
+      { username: req.body.username, user_id: req.body.user_id })
+      .then(user => { 
+        return t.none("UPDATE users SET user_following = array_append(user_following, ${user_username}) WHERE username=${username}", 
+        { user_username: req.body.user_username, username: req.body.username, user_id: req.body.user_id  })
+      })
+    })
     .then(function(data) {
       res.status(200).json({
         status: "success",
-        data: data,
         message: "Added one follower"
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
+//removeFollow function does the below:
+//removes username of user being followed to the user_following column of the user doing the following AND
+//removes username of user doing the following to the user_followers column of the user being followed
+function removeFollow(req, res, next) { 
+  db
+  .task(t => { 
+    return t.none("UPDATE users SET user_followers = array_remove(user_followers, ${username}) WHERE id=${user_id}", 
+    { username: req.body.username, user_id: req.body.user_id })
+    .then(user => { 
+      return t.none("UPDATE users SET user_following = array_remove(user_following, ${user_username}) WHERE username=${username}", 
+      { user_username: req.body.user_username, username: req.body.username, user_id: req.body.user_id  })
+    })
+  })
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        message: "Removed one follower"
       });
     })
     .catch(function(err) {
@@ -136,12 +279,20 @@ function createUser(req, res, next) {
 }
 
 module.exports = {
+getLoggedUser: getLoggedUser,
 getSingleUser: getSingleUser,
+getSingleImageInfo: getSingleImageInfo,
 getAllUserImages: getAllUserImages,
+getLoggedUserImages: getLoggedUserImages, 
 getSingleUserImages: getSingleUserImages, 
 addImage: addImage, 
+addComment: addComment, 
+removeComment: removeComment, 
+addUserDescription: addUserDescription,
 addLike: addLike, 
-addFollower: addFollower, 
+removeLike: removeLike,
+addFollow: addFollow, 
+removeFollow: removeFollow,
 loginUser: loginUser, 
 logoutUser: logoutUser, 
 createUser: createUser

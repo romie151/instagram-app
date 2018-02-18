@@ -15,13 +15,31 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
   res.json(req.user);
 });
 
+router.get("/getcurrentuser", loginRequired, db.getLoggedUser)
+
+router.get("/getsingleuser/:username", loginRequired, db.getSingleUser)
+
+router.get("/getsingleimageinfo/:img_id", db.getSingleImageInfo)
+
+router.get("/getloggeduserimages", loginRequired, db.getLoggedUserImages) 
+
+router.get("/getsingleuserimages/:username", db.getSingleUserImages)
+
 router.post("/addimage", loginRequired, db.addImage)
 
-router.post("/addlike", db.addLike)
+router.post("/addcomment", loginRequired, db.addComment)
 
-router.get("/getcurrentuser", loginRequired, db.getSingleUser)
+router.post("/removecomment", loginRequired, db.removeComment)
 
-router.get("/getsingleuserimages", loginRequired, db.getSingleUserImages)
+router.post("/adduserdescription", loginRequired, db.addUserDescription)
+
+router.post("/addlike", loginRequired, db.addLike)
+
+router.post("/removelike",loginRequired, db.removeLike)
+
+router.post("/addfollow", loginRequired, db.addFollow)
+
+router.post("/removefollow", loginRequired, db.removeFollow)
 
 router.get("/logout", db.logoutUser)
 
